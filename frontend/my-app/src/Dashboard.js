@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+
+
 function Dashboard() {
     // Input data
     const [imageUrl, setImageUrl] = useState('');
@@ -12,6 +18,14 @@ function Dashboard() {
     const [imageData, setImageData] = useState([]);
 
     const [logs, setLogs] = useState([]);
+
+    const settings = {  // Carousel settings
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1
+    };
 
 
     // Function to capture console logs
@@ -99,15 +113,22 @@ function Dashboard() {
                     placeholder="Describe the item you are looking for"
                 />
                 <button onClick={uploadDescription}>Send Description</button>
-                <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxWidth: '100%', overflowX: 'auto' }}>
                     {imageData.map((img, index) => (
-                        <div key={index} style={{ textAlign: 'center' }}>
-                            <img src={img.url} alt={`Similar Image ${index + 1}`} style={{ maxWidth: '300px', maxHeight: '300px' }} />
+                        <div key={index} style={{ flex: '1 0 auto', maxWidth: '300px', textAlign: 'center', margin: '20px' }}>
+                            <Slider {...settings}>
+                                {img.url.map((url, urlIndex) => (
+                                    <div key={urlIndex}>
+                                        <img src={url} alt={`Image ${index + 1}-${urlIndex}`} style={{ width: '100%', height: 'auto' }} />
+                                    </div>
+                                ))}
+                            </Slider>
                             <p>Product Description: {img.document}</p>
                             <p>Similarity Score: {(1 - img.score).toFixed(4)}</p>
                         </div>
                     ))}
                 </div>
+
             </div>
 
         </div>
