@@ -22,9 +22,6 @@ def duplicate_remover(data: list[list[str]]) -> list[list[str]]:
     # Return only the values of the dictionary, which are the unique lists
     return list(data_dict.values())
 
-def response_from_url(url:str):
-    response = requests.get(url)
-    return response.status_code, response
 
 def download_image(url: str, save_path: str) -> None:
     if len(url) == 0:
@@ -33,13 +30,12 @@ def download_image(url: str, save_path: str) -> None:
     try:
         # Get the image from the URL
         for _ in range(3):
-            #time.sleep(0.2)
+            time.sleep(0.2)
             response = requests.get(url)
             if response.status_code != 403:
                 break
-            print("WUHU")
             new_url = "/".join(["https://sttc-stage-zaraphr.inditex.com/photos",url.split("///")[1]])
-            #time.sleep(0.2)
+            time.sleep(0.2)
             response=requests.get(new_url)
             if response.status_code != 403:
                 break
@@ -57,7 +53,7 @@ def download_image(url: str, save_path: str) -> None:
         else:
             # Print error message if download fails
             print("Failed to download image. Status code:", response.status_code)
-    except ArithmeticError as e:
+    except Exception as e:
         # Print error message if an exception occurs
         print("An error occurred:", e)
 
