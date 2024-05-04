@@ -65,9 +65,10 @@ def download_batch(start: int = 0, end: int = -1) -> None:
         # Raise IndexError if start index is after end index
         raise IndexError(f"The start index {start} is after the end index {end}")
     for obj_index in range(start, end+1):
-        obj_path = os.path.join(img_folder_path, f"{obj_index}_")
+        obj_path = os.path.join(img_folder_path, f"{obj_index}")
+        os.makedirs(obj_path)
         for img_index in range(len(data[obj_index])):
-            item_path = obj_path + f"{img_index}.jpg"
+            item_path = os.path.join(obj_path, f"{img_index}.jpg")
             time.sleep(0.2)  # Introducing a small delay to avoid overloading the server
             download_image(data[obj_index][img_index], item_path)  # Download each image
 
@@ -87,3 +88,5 @@ def delete_img_folder() -> None:
         print(f"Deleted folder and its contents: {folder_path}")
     except Exception as e:
         print("An error occurred:", e)
+
+
