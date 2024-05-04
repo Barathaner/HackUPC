@@ -4,7 +4,8 @@ import os
 import time
 import shutil
 from PIL import Image
-import image_processing
+#import image_processing
+
 
 def duplicate_remover(data: list[list[str]]) -> list[list[str]]:
     """
@@ -34,21 +35,23 @@ def download_image(url: str, save_path: str) -> None:
             response = requests.get(url)
             if response.status_code != 403:
                 break
-            new_url = "/".join(["https://sttc-stage-zaraphr.inditex.com/photos",url.split("///")[1]])
+
+            new_url = "/".join(["https://sttc-stage-zaraphr.inditex.com/photos", url.split("///")[1]])
             time.sleep(0.2)
-            response=requests.get(new_url)
+            response = requests.get(new_url)
             if response.status_code != 403:
                 break
-        
+
+
         # Check if the request was successful
         if response.status_code == 200:
             # Open the file in binary write mode and write the image content
             with open(save_path, 'wb') as f:
                 f.write(response.content)
             print("Image downloaded successfully to:", save_path)
-            image_processing.downscale_image(save_path)
-            #image_processing.remove_bg(save_path)
-            
+
+            # image_processing.downscale_image(save_path)
+            # image_processing.remove_bg(save_path)
 
         else:
             # Print error message if download fails
@@ -69,7 +72,7 @@ def read_csv() -> list[list[str]]:
         list: A list of lists containing the data from the CSV file.
     """
     data = []
-    path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"inditextech_hackupc_challenge_images.csv")
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "inditextech_hackupc_challenge_images.csv")
     with open(path, 'r', newline='') as csvfile:
         csvreader = csv.reader(csvfile)
         for row in csvreader:
@@ -79,7 +82,7 @@ def read_csv() -> list[list[str]]:
     return cleaned_data
 
 
-def download_batch(start: int = 0, end: int = -1, merge : bool = False) -> None:
+def download_batch(start: int = 0, end: int = -1, merge: bool = False) -> None:
     """
     Downloads a batch of images from the given data.
 
@@ -92,7 +95,7 @@ def download_batch(start: int = 0, end: int = -1, merge : bool = False) -> None:
         IndexError: If the start index is after the end index.
     """
     data = read_csv()
-    img_folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"img")
+    img_folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "img")
     if not os.path.exists(img_folder_path):
         os.makedirs(img_folder_path)
     if end == -1:
@@ -100,14 +103,14 @@ def download_batch(start: int = 0, end: int = -1, merge : bool = False) -> None:
     if end < start:
         # Raise IndexError if start index is after end index
         raise IndexError(f"The start index {start} is after the end index {end}")
-    for obj_index in range(start, end+1):
+    for obj_index in range(start, end + 1):
         obj_path = os.path.join(img_folder_path, f"{obj_index}")
         os.makedirs(obj_path)
         for img_index in range(len(data[obj_index])):
             item_path = os.path.join(obj_path, f"{img_index}.jpg")
             download_image(data[obj_index][img_index], item_path)  # Download each image
         if merge:
-            merge_images(obj_path, os.path.join(obj_path,"a.jpg"))
+            merge_images(obj_path, os.path.join(obj_path, "a.jpg"))
 
 
 def delete_img_folder() -> None:
@@ -119,18 +122,20 @@ def delete_img_folder() -> None:
 
     """
     try:
-        folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"img")
+        folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "img")
         # Delete the entire folder and its contents
         shutil.rmtree(folder_path)
         print(f"Deleted folder and its contents: {folder_path}")
     except Exception as e:
         print("An error occurred:", e)
 
+
 def parse_link_to_metadata(link):
     link = link.split("///")[1]
     link = link.split("/")
-    meta_data = [link[0],link[1],link[2],link[3]]
+    meta_data = [link[0], link[1], link[2], link[3]]
     return meta_data
+
 
 def merge_images(image_folder: str, output_path: str) -> None:
     """
@@ -146,7 +151,7 @@ def merge_images(image_folder: str, output_path: str) -> None:
     # Open all images
     image_paths = os.listdir(image_folder)
     print(image_paths)
-    images = [Image.open(os.path.join(image_folder,path)) for path in image_paths]
+    images = [Image.open(os.path.join(image_folder, path)) for path in image_paths]
 
     # Get the dimensions of the images
     widths, heights = zip(*(i.size for i in images))
@@ -169,5 +174,8 @@ def merge_images(image_folder: str, output_path: str) -> None:
 
     print("Images merged successfully!")
 
+
 def get_meta_data():
-    return [[parse_link_to_metadata(link) for link in item if link !=""] for item in read_csv()], ["year","season","product type", "section"]
+    return [[parse_link_to_metadata(link) for link in item if link != ""] for item in read_csv()], ["year", "season",
+                                                                                                    "product type",
+                                                                                                    "section"]
