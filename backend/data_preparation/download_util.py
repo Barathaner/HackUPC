@@ -116,4 +116,4 @@ def parse_link_to_metadata(link):
 
 
 def get_meta_data():
-    return [[parse_link_to_metadata(link) for link in item if link !=""] for item in read_csv()], ["year","season","product type", "secion"]
+    return [[parse_link_to_metadata(link) for link in item if link !=""] for item in read_csv()], ["year","season","product type", "section"]
