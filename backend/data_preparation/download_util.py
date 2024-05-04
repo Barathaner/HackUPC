@@ -15,7 +15,7 @@ def duplicate_remover(data: list[list[str]]) -> list[list[str]]:
         list[list[str]]: A new list with duplicate lists removed, preserving order.
     """
     # Create a dictionary where the key is a semicolon-separated string of list elements and the value is the list
-    data_dict = {";".join(item): item for item in data}
+    data_dict = {";".join(item): item for item in data if ";".join(item) != ";;"}
 
     # Return only the values of the dictionary, which are the unique lists
     return list(data_dict.values())
@@ -57,7 +57,9 @@ def read_csv() -> list[list[str]]:
         csvreader = csv.reader(csvfile)
         for row in csvreader:
             data.append(row)
-    return duplicate_remover(data[1:])
+    unique_data = duplicate_remover(data[1:])
+    cleaned_data = [item for item in unique_data if parse_link_to_metadata(item[0])[0].isdigit()]
+    return cleaned_data
 
 
 def download_batch(start: int = 0, end: int = -1) -> None:
@@ -105,4 +107,13 @@ def delete_img_folder() -> None:
     except Exception as e:
         print("An error occurred:", e)
 
+def parse_link_to_metadata(link):
+    link = link.split("///")[1]
+    link = link.split("/")
+    meta_data = [link[0],link[1],link[2],link[3]]
+    return meta_data
 
+
+
+def get_meta_data():
+    return [[parse_link_to_metadata(link) for link in item if link !=""] for item in read_csv()], ["year","season","product type", "section"]
