@@ -3,6 +3,8 @@ import requests
 import os
 import time
 import shutil
+from PIL import Image
+import image_processing
 
 def duplicate_remover(data: list[list[str]]) -> list[list[str]]:
     """
@@ -33,6 +35,8 @@ def download_image(url: str, save_path: str) -> None:
             with open(save_path, 'wb') as f:
                 f.write(response.content)
             print("Image downloaded successfully to:", save_path)
+            image_processing.downscale_image(save_path)
+            image_processing.remove_bg(save_path)
         else:
             # Print error message if download fails
             print("Failed to download image. Status code:", response.status_code)
@@ -62,21 +66,22 @@ def read_csv() -> list[list[str]]:
     return cleaned_data
 
 
-def download_batch(start: int = 0, end: int = -1) -> None:
+def download_batch(start: int = 0, end: int = -1, merge : bool = False) -> None:
     """
     Downloads a batch of images from the given data.
 
     Args:
         start (int, optional): The start index of the batch. Defaults to 0.
         end (int, optional): The end index of the batch. If -1, end is set to the length of data. Defaults to -1.
+        merge (bool, optional): Decision if a merged image should also be created
 
     Raises:
         IndexError: If the start index is after the end index.
     """
     data = read_csv()
     img_folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"img")
-
-    os.makedirs(img_folder_path)
+    if not os.path.exists(img_folder_path):
+        os.makedirs(img_folder_path)
     if end == -1:
         end = len(data)
     if end < start:
@@ -89,6 +94,8 @@ def download_batch(start: int = 0, end: int = -1) -> None:
             item_path = os.path.join(obj_path, f"{img_index}.jpg")
             time.sleep(0.2)  # Introducing a small delay to avoid overloading the server
             download_image(data[obj_index][img_index], item_path)  # Download each image
+        if merge:
+            merge_images(obj_path, os.path.join(obj_path,"a.jpg"))
 
 
 def delete_img_folder() -> None:
@@ -113,7 +120,42 @@ def parse_link_to_metadata(link):
     meta_data = [link[0],link[1],link[2],link[3]]
     return meta_data
 
+def merge_images(image_folder: str, output_path: str) -> None:
+    """
+    Merge multiple images into one.
 
+    Args:
+    - image_paths (List[str]): List of file paths to the images to be merged.
+    - output_path (str): File path to save the merged image.
+
+    Returns:
+    - None
+    """
+    # Open all images
+    image_paths = os.listdir(image_folder)
+    print(image_paths)
+    images = [Image.open(os.path.join(image_folder,path)) for path in image_paths]
+
+    # Get the dimensions of the images
+    widths, heights = zip(*(i.size for i in images))
+
+    # Determine the maximum width and total height of the combined image
+    total_width = sum(widths)
+    max_height = max(heights)
+
+    # Create a new image with the calculated dimensions
+    merged_image = Image.new("RGB", (total_width, max_height))
+
+    # Paste each image onto the new image
+    x_offset = 0
+    for img in images:
+        merged_image.paste(img, (x_offset, 0))
+        x_offset += img.size[0]
+
+    # Save the merged image
+    merged_image.save(output_path)
+
+    print("Images merged successfully!")
 
 def get_meta_data():
     return [[parse_link_to_metadata(link) for link in item if link !=""] for item in read_csv()], ["year","season","product type", "section"]

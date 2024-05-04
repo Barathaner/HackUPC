@@ -1,3 +1,6 @@
 requests
 flask
 flask-cors
+Pillow
+opencv-python
+rembg
