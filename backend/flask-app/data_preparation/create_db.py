@@ -5,7 +5,7 @@ import chromadb
 from chromadb.utils import embedding_functions
 from pathlib import Path
 
-batch_n = 50
+batch_n = 12
 
 
 def init_chroma_db():

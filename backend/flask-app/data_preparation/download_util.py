@@ -61,7 +61,7 @@ def download_image(url: str, save_path: str) -> None:
         print("An error occurred:", e)
 
 
-def read_csv() -> list[list[str]]:
+def read_csv(path = None) -> list[list[str]]:
     """
     Reads data from a CSV file and returns it as a list of lists.
 
@@ -72,7 +72,8 @@ def read_csv() -> list[list[str]]:
         list: A list of lists containing the data from the CSV file.
     """
     data = []
-    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "inditextech_hackupc_challenge_images.csv")
+    if path is None:
+        path = os.path.join([os.path.dirname(os.path.realpath(__file__)), "inditextech_hackupc_challenge_images.csv"])
     with open(path, 'r', newline='') as csvfile:
         csvreader = csv.reader(csvfile)
         for row in csvreader:
