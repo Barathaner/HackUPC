@@ -39,6 +39,9 @@ function Dashboard() {
             .then(response => {
                 console.log('Image URL sent successfully:', response.data);
                 setImageData(response.data);
+                console.log(imageData);
+
+
             })
             .catch(error => {
                 console.error('Error sending image URL:', error);
@@ -66,7 +69,7 @@ function Dashboard() {
 
     return (
         <div>
-            <h1>Dashboard</h1>
+            <h1>INDITEX Fashion-AId</h1>
             <input
                 type="text"
                 value={imageUrl}
@@ -92,7 +95,8 @@ function Dashboard() {
                 {imageData.map((img, index) => (
                     <div key={index} style={{ textAlign: 'center' }}>
                         <img src={img.url} alt={`Similar Image ${index + 1}`} style={{ maxWidth: '300px', maxHeight: '300px' }} />
-                        <p>Similarity Score: {img.score}</p>
+                        <p>Product Description: {img.document}</p>
+                        <p>Similarity Score: {1 - img.score}</p>
                     </div>
                 ))}
             </div>
