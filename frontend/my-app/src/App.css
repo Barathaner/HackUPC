@@ -50,3 +50,70 @@
     transform: rotate(360deg);
   }
 }
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Ensures the header extends full width */
+  background-color: #000000;
+  color: #ffffff;
+  /* Background color for better readability */
+  z-index: 1000;
+  /* Keeps the header above other content */
+  padding: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  /* Optional shadow for visual depth */
+  text-align: center;
+  /* Centers the title in the header */
+  justify-content: space-between;
+  /* Space elements out between sides */
+  align-items: center;
+  /* Vertical alignment */
+}
+
+.content-container {
+  padding-top: 70px;
+  /* Space to ensure content isn't hidden under the header */
+}
+
+.fixed-header h1 {
+  margin: 5;
+  padding: 0;
+  /* Removes any default margins */
+  font-size: 20px;
+  /* Adjust font size as needed */
+}
+
+.fixed-header h2 {
+  margin: 5;
+  padding: 0;
+  font-size: 15px;
+}
+
+.help-popup {
+  position: fixed;
+  top: 50px;
+  /* Below the header */
+  width: 300px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  padding: 15px;
+  z-index: 1010;
+  /* Higher than the header to avoid overlap issues */
+  border-radius: 5px;
+}
+
+.help-popup p {
+  margin: 0 0 10px 0;
+}
+
+.help-popup button {
+  all: unset;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5;
+  padding: 0;
+}
