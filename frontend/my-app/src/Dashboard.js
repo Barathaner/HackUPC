@@ -22,10 +22,12 @@ function Dashboard() {
     };
 
     const sendPictureToBackend = () => {
-        axios.post('https://your-backend-endpoint/api/send-image', { url: displayImageUrl })
-            .then(response => console.log('Image URL sent successfully', response))
-            .catch(error => console.log('Error sending image URL:', error));
+        // Make sure the URL points to your Flask backend
+        axios.post('http://localhost:5001/api/send-image', { url: displayImageUrl })
+            .then(response => console.log('Image URL sent successfully:', response.data))
+            .catch(error => console.error('Error sending image URL:', error));
     };
+
 
     return (
         <div>
