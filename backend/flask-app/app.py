@@ -7,8 +7,9 @@ import os
 
 link_db = read_csv(os.path.join(os.path.dirname(os.path.realpath(__file__)),"data_preparation","inditextech_hackupc_challenge_images.csv"))
 app = Flask(__name__)
-CORS(app)  # This enables CORS for all domains on all routes
+CORS(app)
 
+# Load database
 parent_dir_path = str(Path(__file__).parents[1])
 chroma_data_path = os.path.join(parent_dir_path, "chroma_data")
 client = chromadb.PersistentClient(path=chroma_data_path)
