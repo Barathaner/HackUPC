@@ -28,10 +28,24 @@
   color: #61dafb;
 }
 
+.console-log {
+  background-color: black;
+  color: limegreen;
+  font-family: monospace;
+  padding: 10px;
+  overflow-y: scroll;
+  height: 200px;
+  /* Set a fixed height for scrolling */
+  white-space: pre-wrap;
+  /* Maintains formatting */
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
