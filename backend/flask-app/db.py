@@ -5,7 +5,7 @@ from img2txt import *
 import requests
 
 
-def image_query(collection, imageurl, n_results):
+def image_query(collection, imageurl, n_results, link_list):
     path = 'test_img.png'
 
     # Get the image from the URL
@@ -24,7 +24,7 @@ def image_query(collection, imageurl, n_results):
 
     query_results = collection.query(
         query_texts=descr,
-        n_results=n_results,
+        n_results=n_results*3-2,
     )
 
     # Flattening the list of lists in query_results
@@ -38,15 +38,29 @@ def image_query(collection, imageurl, n_results):
     flat_documents = [
         item for sublist in query_results["documents"] for item in sublist
     ]
+    
+    unique_object_ids = []
+    ids = []
+    for i in range(n_results*3-2):
+        if flat_ids[i] not in unique_object_ids:
+            ids.append(i)
+            if len(ids) == n_results:
+                break
+
+    flat_ids = [flat_ids[i] for i in ids]  
+    flat_distances = [flat_distances[i] for i in ids]  
+    flat_metadatas = [flat_metadatas[i] for i in ids]  
+    flat_documents = [flat_documents[i] for i in ids]            
+    
 
     data_to_send = [
         {
-            "url": meta["url"],
+            "url": link_list[id],
             "score": distance,
             "document": document,  # Including the document description
         }
-        for meta, distance, document in zip(
-            flat_metadatas, flat_distances, flat_documents
+        for id, distance, document in zip(
+            flat_ids, flat_distances, flat_documents
         )
     ]
 
