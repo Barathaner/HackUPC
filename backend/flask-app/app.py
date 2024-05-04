@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from db import *
+from data_preparation.download_util import read_csv
 import os
 
 
+link_db = read_csv(os.path.join(os.path.dirname(os.path.realpath(__file__)),"data_preparation","inditextech_hackupc_challenge_images.csv"))
 app = Flask(__name__)
 CORS(app)  # This enables CORS for all domains on all routes
 
@@ -27,7 +29,8 @@ def home():
 def match_image():
     image_url = request.json["url"]
     n_images = request.json["n"]
-    result = image_query(collection, image_url, n_images)
+    result = image_query(collection, image_url, n_images, link_db)
+
     return jsonify(result)
 
 
