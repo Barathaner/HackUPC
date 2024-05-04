@@ -5,6 +5,8 @@ import chromadb
 from chromadb.utils import embedding_functions
 from pathlib import Path
 
+batch_n = 50
+
 
 def init_chroma_db():
     parent_dir_path = str(Path(__file__).parents[1])
@@ -24,45 +26,48 @@ def process_images(base_dir, batch_n, collection):
     # Save csv for url access
     csv = download_util.read_csv()
 
+    # Iterate over batches
     for i in range(batch_n):
         item_folder = os.path.join(base_dir, str(i))
         if os.path.exists(item_folder) and os.path.isdir(item_folder):
+            # Iterate over images
             image_files = [f for f in os.listdir(item_folder) if os.path.isfile(os.path.join(item_folder, f))]
             for image_file in image_files:
                 image_path = os.path.join(item_folder, image_file)
-                caption = img2txt.generate_caption(image_path)
 
-                print(f"Caption for {image_file} of batch {i}: {caption}")
+                # Create description for image
+                descr = img2txt.generate_caption(image_path)
+                print(f"Caption for {image_file} of batch {i}: {descr}")
 
-                # Metadata handling needs to be accurate and robust
+                # Create metadata
                 j = int(image_file[0])
                 url = csv[i][j]
                 id = f"{i}{j}"
 
                 # Add vector to database
                 collection.add(
-                    documents=caption,  # Ensure this is a list of vectors
+                    documents=descr,
                     ids=[id],
                     metadatas=[{'url': url}]
                 )
 
 
 def main():
-    batch_n = 50
-    #download_util.delete_img_folder()
-    #download_util.download_batch(0, batch_n)
-    print("Start processing...")
 
+    # Download images
+    download_util.delete_img_folder()
+    download_util.download_batch(0, batch_n)
+
+    # Initialize database
     base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "img")
     collection = init_chroma_db()
+
+    print("Start processing...")
     process_images(base_dir, batch_n, collection)
-
     print("Finished processing")
-    download_util.delete_img_folder()
 
-    # Example query
-    #query_results = collection.query(query_texts=["Black jeans"], n_results=3)
-    #print(query_results)
+    # Delete image folder
+    download_util.delete_img_folder()
 
 
 if __name__ == "__main__":
