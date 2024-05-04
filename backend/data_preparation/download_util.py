@@ -22,13 +22,24 @@ def duplicate_remover(data: list[list[str]]) -> list[list[str]]:
     # Return only the values of the dictionary, which are the unique lists
     return list(data_dict.values())
 
+
 def download_image(url: str, save_path: str) -> None:
     if len(url) == 0:
         print("No url was provided")
         return
     try:
         # Get the image from the URL
-        response = requests.get(url)
+        for _ in range(3):
+            time.sleep(0.2)
+            response = requests.get(url)
+            if response.status_code != 403:
+                break
+            new_url = "/".join(["https://sttc-stage-zaraphr.inditex.com/photos",url.split("///")[1]])
+            time.sleep(0.2)
+            response=requests.get(new_url)
+            if response.status_code != 403:
+                break
+        
         # Check if the request was successful
         if response.status_code == 200:
             # Open the file in binary write mode and write the image content
@@ -36,7 +47,9 @@ def download_image(url: str, save_path: str) -> None:
                 f.write(response.content)
             print("Image downloaded successfully to:", save_path)
             image_processing.downscale_image(save_path)
-            image_processing.remove_bg(save_path)
+            #image_processing.remove_bg(save_path)
+            
+
         else:
             # Print error message if download fails
             print("Failed to download image. Status code:", response.status_code)
@@ -92,7 +105,6 @@ def download_batch(start: int = 0, end: int = -1, merge : bool = False) -> None:
         os.makedirs(obj_path)
         for img_index in range(len(data[obj_index])):
             item_path = os.path.join(obj_path, f"{img_index}.jpg")
-            time.sleep(0.2)  # Introducing a small delay to avoid overloading the server
             download_image(data[obj_index][img_index], item_path)  # Download each image
         if merge:
             merge_images(obj_path, os.path.join(obj_path,"a.jpg"))
