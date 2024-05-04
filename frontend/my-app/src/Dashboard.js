@@ -69,36 +69,42 @@ function Dashboard() {
 
     return (
         <div>
-            <h1>INDITEX Fashion-AId</h1>
-            <input
-                type="text"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="Enter image URL here"
-            />
-            <button onClick={uploadPicture}>Upload Picture</button>
-            {displayImageUrl && (
-                <img
-                    src={displayImageUrl}
-                    alt="Display"
-                    style={{ maxWidth: '500px', maxHeight: '500px' }}
+            <header className="fixed-header">
+                <h1>INDITEX Fashion-AId</h1>
+            </header>
+
+            <div className="content-container">
+
+                <input
+                    type="text"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="Enter image URL here"
                 />
-            )}
-            <input
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe the item you are looking for"
-            />
-            <button onClick={uploadDescription}>Send Description</button>
-            <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
-                {imageData.map((img, index) => (
-                    <div key={index} style={{ textAlign: 'center' }}>
-                        <img src={img.url} alt={`Similar Image ${index + 1}`} style={{ maxWidth: '300px', maxHeight: '300px' }} />
-                        <p>Product Description: {img.document}</p>
-                        <p>Similarity Score: {1 - img.score}</p>
-                    </div>
-                ))}
+                <button onClick={uploadPicture}>Upload Picture</button>
+                {displayImageUrl && (
+                    <img
+                        src={displayImageUrl}
+                        alt="Display"
+                        style={{ maxWidth: '500px', maxHeight: '500px' }}
+                    />
+                )}
+                <input
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Describe the item you are looking for"
+                />
+                <button onClick={uploadDescription}>Send Description</button>
+                <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
+                    {imageData.map((img, index) => (
+                        <div key={index} style={{ textAlign: 'center' }}>
+                            <img src={img.url} alt={`Similar Image ${index + 1}`} style={{ maxWidth: '300px', maxHeight: '300px' }} />
+                            <p>Product Description: {img.document}</p>
+                            <p>Similarity Score: {(1 - img.score).toFixed(4)}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
 
         </div>

@@ -50,3 +50,25 @@
     transform: rotate(360deg);
   }
 }
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Ensures the header extends full width */
+  background-color: white;
+  /* Background color for better readability */
+  z-index: 1000;
+  /* Keeps the header above other content */
+  padding: 10px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  /* Optional shadow for visual depth */
+  text-align: center;
+  /* Centers the title in the header */
+}
+
+.content-container {
+  padding-top: 70px;
+  /* Space to ensure content isn't hidden under the header */
+}
