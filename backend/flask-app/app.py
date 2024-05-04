@@ -5,8 +5,9 @@ import os
 
 
 app = Flask(__name__)
-CORS(app)  # This enables CORS for all domains on all routes
+CORS(app)
 
+# Load database
 parent_dir_path = str(Path(__file__).parents[1])
 chroma_data_path = os.path.join(parent_dir_path, "chroma_data")
 client = chromadb.PersistentClient(path=chroma_data_path)
