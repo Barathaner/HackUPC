@@ -35,11 +35,13 @@ def download_image(url: str, save_path: str) -> None:
             response = requests.get(url)
             if response.status_code != 403:
                 break
+
             new_url = "/".join(["https://sttc-stage-zaraphr.inditex.com/photos", url.split("///")[1]])
             time.sleep(0.2)
             response = requests.get(new_url)
             if response.status_code != 403:
                 break
+
 
         # Check if the request was successful
         if response.status_code == 200:
@@ -47,9 +49,9 @@ def download_image(url: str, save_path: str) -> None:
             with open(save_path, 'wb') as f:
                 f.write(response.content)
             print("Image downloaded successfully to:", save_path)
-            #image_processing.downscale_image(save_path)
-            # image_processing.remove_bg(save_path)
 
+            # image_processing.downscale_image(save_path)
+            # image_processing.remove_bg(save_path)
 
         else:
             # Print error message if download fails

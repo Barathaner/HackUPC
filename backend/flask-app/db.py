@@ -27,12 +27,27 @@ def image_query(collection, imageurl, n_results):
         n_results=n_results,
     )
 
+    # Flattening the list of lists in query_results
+    flat_ids = [item for sublist in query_results["ids"] for item in sublist]
+    flat_distances = [
+        item for sublist in query_results["distances"] for item in sublist
+    ]
+    flat_metadatas = [
+        item for sublist in query_results["metadatas"] for item in sublist
+    ]
+    flat_documents = [
+        item for sublist in query_results["documents"] for item in sublist
+    ]
+
     data_to_send = [
-        {"url": meta["url"], "score": distance}  # Accessing each dictionary correctly
-        for metadata, distance in zip(
-            query_results["metadatas"], query_results["distances"]
+        {
+            "url": meta["url"],
+            "score": distance,
+            "document": document,  # Including the document description
+        }
+        for meta, distance, document in zip(
+            flat_metadatas, flat_distances, flat_documents
         )
-        for meta in metadata  # This inner loop is necessary because metadata is a list of dictionaries
     ]
 
     print(data_to_send)
@@ -45,12 +60,27 @@ def prompt_query(collection, prompt, n_results):
         query_texts=prompt,
         n_results=n_results,
     )
+    # Flattening the list of lists in query_results
+    flat_ids = [item for sublist in query_results["ids"] for item in sublist]
+    flat_distances = [
+        item for sublist in query_results["distances"] for item in sublist
+    ]
+    flat_metadatas = [
+        item for sublist in query_results["metadatas"] for item in sublist
+    ]
+    flat_documents = [
+        item for sublist in query_results["documents"] for item in sublist
+    ]
+
     data_to_send = [
-        {"url": meta["url"], "score": distance}  # Accessing each dictionary correctly
-        for metadata, distance in zip(
-            query_results["metadatas"], query_results["distances"]
+        {
+            "url": meta["url"],
+            "score": distance,
+            "document": document,  # Including the document description
+        }
+        for meta, distance, document in zip(
+            flat_metadatas, flat_distances, flat_documents
         )
-        for meta in metadata  # This inner loop is necessary because metadata is a list of dictionaries
     ]
 
     print(data_to_send)
@@ -72,12 +102,27 @@ def both_query(collection, prompt, image_url, n_results):
         query_texts=query_text,
         n_results=n_results,
     )
+    # Flattening the list of lists in query_results
+    flat_ids = [item for sublist in query_results["ids"] for item in sublist]
+    flat_distances = [
+        item for sublist in query_results["distances"] for item in sublist
+    ]
+    flat_metadatas = [
+        item for sublist in query_results["metadatas"] for item in sublist
+    ]
+    flat_documents = [
+        item for sublist in query_results["documents"] for item in sublist
+    ]
+
     data_to_send = [
-        {"url": meta["url"], "score": distance}  # Accessing each dictionary correctly
-        for metadata, distance in zip(
-            query_results["metadatas"], query_results["distances"]
+        {
+            "url": meta["url"],
+            "score": distance,
+            "document": document,  # Including the document description
+        }
+        for meta, distance, document in zip(
+            flat_metadatas, flat_distances, flat_documents
         )
-        for meta in metadata  # This inner loop is necessary because metadata is a list of dictionaries
     ]
 
     print(data_to_send)
