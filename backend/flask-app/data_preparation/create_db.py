@@ -4,8 +4,9 @@ import os
 import chromadb
 from chromadb.utils import embedding_functions
 from pathlib import Path
+import time
 
-batch_n = 12
+batch_n = 20
 
 
 def init_chroma_db():
@@ -71,4 +72,6 @@ def main():
 
 
 if __name__ == "__main__":
+    s = time.time()
     main()
+    print(time.time()-s)

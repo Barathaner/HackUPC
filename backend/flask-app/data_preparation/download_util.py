@@ -73,7 +73,8 @@ def read_csv(path = None) -> list[list[str]]:
     """
     data = []
     if path is None:
-        path = os.path.join([os.path.dirname(os.path.realpath(__file__)), "inditextech_hackupc_challenge_images.csv"])
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "inditextech_hackupc_challenge_images.csv")
+
     with open(path, 'r', newline='') as csvfile:
         csvreader = csv.reader(csvfile)
         for row in csvreader:
