@@ -4,6 +4,22 @@ import os
 import time
 import shutil
 
+def duplicate_remover(data: list[list[str]]) -> list[list[str]]:
+    """
+    Removes duplicate lists.
+
+    Parameters:
+        data (list[list[str]]): A list of lists containing strings.
+
+    Returns:
+        list[list[str]]: A new list with duplicate lists removed, preserving order.
+    """
+    # Create a dictionary where the key is a semicolon-separated string of list elements and the value is the list
+    data_dict = {";".join(item): item for item in data}
+
+    # Return only the values of the dictionary, which are the unique lists
+    return list(data_dict.values())
+
 def download_image(url: str, save_path: str) -> None:
     if len(url) == 0:
         print("No url was provided")
@@ -41,7 +57,7 @@ def read_csv() -> list[list[str]]:
         csvreader = csv.reader(csvfile)
         for row in csvreader:
             data.append(row)
-    return data[1:]
+    return duplicate_remover(data[1:])
 
 
 def download_batch(start: int = 0, end: int = -1) -> None:
