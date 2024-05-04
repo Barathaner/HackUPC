@@ -48,21 +48,21 @@ def process_images(base_dir, batch_n, collection):
 
 
 def main():
-    batch_n = 5
-    download_util.delete_img_folder()
-    download_util.download_batch(0, batch_n)
+    batch_n = 50
+    #download_util.delete_img_folder()
+    #download_util.download_batch(0, batch_n)
     print("Start processing...")
 
     base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "img")
     collection = init_chroma_db()
-
     process_images(base_dir, batch_n, collection)
+
     print("Finished processing")
     download_util.delete_img_folder()
 
     # Example query
-    query_results = collection.query(query_texts=["Black jeans"], n_results=3)
-    print(query_results)
+    #query_results = collection.query(query_texts=["Black jeans"], n_results=3)
+    #print(query_results)
 
 
 if __name__ == "__main__":

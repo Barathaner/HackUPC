@@ -1,12 +1,21 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-
-
 from db import *
+import os
 
 
 app = Flask(__name__)
 CORS(app)  # This enables CORS for all domains on all routes
+
+parent_dir_path = str(Path(__file__).parents[1])
+chroma_data_path = os.path.join(parent_dir_path, "chroma_data")
+client = chromadb.PersistentClient(path=chroma_data_path)
+embedding_func = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
+collection = client.get_or_create_collection(
+    name="vec_db",
+    embedding_function=embedding_func,
+    metadata={"hnsw:space": "cosine"}
+)
 
 
 @app.route("/")
