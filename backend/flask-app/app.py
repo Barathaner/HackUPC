@@ -2,6 +2,9 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from db import *
 import os
+import chromadb
+from chromadb.utils import embedding_functions
+from pathlib import Path
 
 
 app = Flask(__name__)

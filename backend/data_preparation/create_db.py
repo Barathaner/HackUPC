@@ -35,14 +35,14 @@ def process_images(base_dir, batch_n, collection):
             for image_file in image_files:
                 image_path = os.path.join(item_folder, image_file)
 
-                # Create description for image
-                descr = img2txt.generate_caption(image_path)
-                print(f"Caption for {image_file} of batch {i}: {descr}")
-
                 # Create metadata
                 j = int(image_file[0])
                 url = csv[i][j]
                 id = f"{i}{j}"
+
+                # Create description for image
+                descr = img2txt.generate_caption(image_path, url)
+                print(f"Caption for {image_file} of batch {i}: {descr}")
 
                 # Add vector to database
                 collection.add(
@@ -67,7 +67,7 @@ def main():
     print("Finished processing")
 
     # Delete image folder
-    download_util.delete_img_folder()
+    #download_util.delete_img_folder()
 
 
 if __name__ == "__main__":

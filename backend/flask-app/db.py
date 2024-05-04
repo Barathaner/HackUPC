@@ -1,6 +1,3 @@
-import chromadb
-from chromadb.utils import embedding_functions
-from pathlib import Path
 import requests
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
@@ -50,6 +47,9 @@ def image_query(collection, imageurl, n_results):
     # Flattening the list of lists in query_results
     flat_distances = [
         item for sublist in query_results["distances"] for item in sublist
+    ]
+    flat_ids = [
+        item for sublist in query_results["ids"] for item in sublist
     ]
     flat_metadatas = [
         item for sublist in query_results["metadatas"] for item in sublist
