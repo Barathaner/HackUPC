@@ -4,7 +4,7 @@ import os
 import time
 import shutil
 from PIL import Image
-import resize
+import image_processing
 
 def duplicate_remover(data: list[list[str]]) -> list[list[str]]:
     """
@@ -35,7 +35,8 @@ def download_image(url: str, save_path: str) -> None:
             with open(save_path, 'wb') as f:
                 f.write(response.content)
             print("Image downloaded successfully to:", save_path)
-            resize.downscale_image(save_path)
+            image_processing.downscale_image(save_path)
+            image_processing.remove_bg(save_path)
         else:
             # Print error message if download fails
             print("Failed to download image. Status code:", response.status_code)
