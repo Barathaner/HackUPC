@@ -4,3 +4,5 @@ flask-cors
 Pillow
 opencv-python
 rembg
+sentence_transformers
+chromadb

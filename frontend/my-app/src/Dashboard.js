@@ -46,7 +46,6 @@ function Dashboard() {
         }
 
         // Set image url to backend
-        setDisplayImageUrl(imageUrl);
         console.log('Image URL set:', imageUrl);
 
         axios.post('http://localhost:5001/api/match-image', { url: imageUrl, n: 6 })
@@ -59,6 +58,34 @@ function Dashboard() {
             })
             .catch(error => {
                 console.error('Error sending image URL:', error);
+            }).finally(() => {
+                setDisplayImageUrl(imageUrl);
+            });
+    };
+
+    const uploadBoth = () => {
+        if (!description) {
+            console.error('No description provided');
+            return;
+        }
+
+        if (!imageUrl) {
+            console.error('No image URL provided');
+            return;
+        }
+
+        console.log('Description set:', description);
+        console.log('Image URL set:', imageUrl);
+
+
+        // Send description to the backend
+        axios.post('http://localhost:5001/api/match-both', { prompt: description, url: imageUrl, n: 6 })
+            .then(response => {
+                console.log('Prompt and Url sent successfully:', response.data);
+                setImageData(response.data);
+            })
+            .catch(error => {
+                console.error('Error sending image and url:', error);
             });
     };
 
@@ -103,7 +130,7 @@ function Dashboard() {
                     <img
                         src={displayImageUrl}
                         alt="Display"
-                        style={{ maxWidth: '500px', maxHeight: '500px' }}
+                        style={{ maxWidth: '400px', maxHeight: '400px' }}
                     />
                 )}
                 <input
@@ -112,7 +139,9 @@ function Dashboard() {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Describe the item you are looking for"
                 />
-                <button onClick={uploadDescription}>Send Description</button>
+                <button onClick={uploadDescription}>Upload Prompt</button>
+                <button onClick={uploadBoth}>Upload Picture with Prompt</button>
+
                 <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', maxWidth: '100%', overflowX: 'auto' }}>
                     {imageData.map((img, index) => (
                         <div key={index} style={{ flex: '1 0 auto', maxWidth: '300px', textAlign: 'center', margin: '20px' }}>
@@ -123,8 +152,8 @@ function Dashboard() {
                                     </div>
                                 ))}
                             </Slider>
-                            <p>Product Description: {img.document}</p>
-                            <p>Similarity Score: {(1 - img.score).toFixed(4)}</p>
+                            <p>{img.document}</p>
+                            <p>Similarity Score: {((1 - img.score) * 100).toFixed(2)} % </p>
                         </div>
                     ))}
                 </div>
