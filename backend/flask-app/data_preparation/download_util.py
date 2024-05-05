@@ -31,16 +31,15 @@ def download_image(url: str, save_path: str) -> None:
     try:
         # Get the image from the URL
         for _ in range(3):
-            time.sleep(0.2)
-            response = requests.get(url)
+            response = requests.get(url,timeout=5)
             if response.status_code != 403:
                 break
 
             new_url = "/".join(["https://sttc-stage-zaraphr.inditex.com/photos", url.split("///")[1]])
-            time.sleep(0.2)
-            response = requests.get(new_url)
+            response = requests.get(new_url,timeout=5)
             if response.status_code != 403:
                 break
+            time.sleep(0.2)
 
 
         # Check if the request was successful
@@ -80,7 +79,7 @@ def read_csv(path = None) -> list[list[str]]:
         for row in csvreader:
             data.append(row)
     unique_data = duplicate_remover(data[1:])
-    cleaned_data = [item for item in unique_data if parse_link_to_metadata(item[0])[0].isdigit()]
+    cleaned_data = [item for item in unique_data if is_valid_link(item[0])]
     return cleaned_data
 
 
@@ -131,12 +130,33 @@ def delete_img_folder() -> None:
     except Exception as e:
         print("An error occurred:", e)
 
-
 def parse_link_to_metadata(link):
+    link_parts = link.split('/')
+
+    product_type_mapping = {
+        "0": "clothes",
+        "1": "shoes",
+        "2": "perfumery",
+        "3": "sport",
+        "4": "home"
+    }
+    section_mapping = {
+        "1": "women",
+        "2": "men",
+        "3": "children",
+    }
+    product_type = product_type_mapping.get(link_parts[8], "")
+    section = section_mapping.get(link_parts[9], "")
+
+    meta_data = [product_type, section]
+    return meta_data
+
+
+def is_valid_link(link):
     link = link.split("///")[1]
     link = link.split("/")
     meta_data = [link[0], link[1], link[2], link[3]]
-    return meta_data
+    return meta_data[0].isdigit()
 
 
 def merge_images(image_folder: str, output_path: str) -> None:
