@@ -246,8 +246,8 @@ def main():
     while batch_id*batch_n < image_n:
         start = batch_id*batch_n
         end = (batch_id+1)*batch_n-1
-        download_util.download_batch(start+1000, end+1000)
-        process_imageslol(base_dir, start+1000,end+1000, collection)
+        download_util.download_batch(start+2000, end+2000)
+        process_imageslol(base_dir, start+2000,end+2000, collection)
         download_util.delete_img_folder()
         batch_id += 1
         
