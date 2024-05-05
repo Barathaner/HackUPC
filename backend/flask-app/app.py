@@ -49,7 +49,7 @@ def match_both():
     prompt = request.json["prompt"]
     image_url = request.json["url"]
     n_images = request.json["n"]
-    result = both_query(collection, prompt, image_url, n_images)
+    result = both_query(collection, prompt, image_url, n_images,link_db)
     return jsonify(result)
 
 
